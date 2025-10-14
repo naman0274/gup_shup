@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gup_shup/config/theme/app_theme.dart';
 import 'package:gup_shup/core/common/custom_button.dart';
 import 'package:gup_shup/core/common/custom_text_field.dart';
+import 'package:gup_shup/presentation/screens/auth/signup_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -13,6 +14,13 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
+@override
+  void dispose(){
+    super.dispose();
+emailController.dispose();
+passwordController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -83,9 +91,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           style: Theme.of(context).textTheme.bodyLarge
                               ?.copyWith(
                                 color: Theme.of(context).primaryColor,
+                                fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               ),
-                          recognizer: TapGestureRecognizer(),
+                          recognizer: TapGestureRecognizer()..onTap=(){
+                            Navigator.pop(context);}
                         ),
                       ],
                     ),

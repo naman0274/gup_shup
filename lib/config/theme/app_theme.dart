@@ -23,7 +23,7 @@ class AppTheme {
 
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
-      fillColor: primaryColor.withValues(alpha: 0.5),
+      fillColor: primaryColor.withValues(alpha: 0.1),
       contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(24),
@@ -38,6 +38,7 @@ class AppTheme {
         borderSide: BorderSide(color: primaryColor),
       ),
       hintStyle: TextStyle(color: Colors.grey.shade600),
+
     ),
 
     // AppBar Theme
