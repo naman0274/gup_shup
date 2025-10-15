@@ -7,7 +7,7 @@ class CustomTextField extends StatelessWidget {
   final bool? obscureText;
   final TextInputType? keyboardType;
   final Widget? prefixIcon;
-  final String? labelText;
+  final String? labelText;  //added later
   final Widget? suffixIcon;
   final FocusNode? focusNode;
   final String? Function(String?)? validator;

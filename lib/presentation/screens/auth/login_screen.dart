@@ -91,11 +91,12 @@ passwordController.dispose();
                           style: Theme.of(context).textTheme.bodyLarge
                               ?.copyWith(
                                 color: Theme.of(context).primaryColor,
-                                fontSize: 16,
+                                fontSize: 18,
                                 fontWeight: FontWeight.bold,
                               ),
                           recognizer: TapGestureRecognizer()..onTap=(){
-                            Navigator.pop(context);}
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => SignupScreen(),));
+                           }
                         ),
                       ],
                     ),
