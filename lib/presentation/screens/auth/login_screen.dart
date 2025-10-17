@@ -14,12 +14,40 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  final _emailFocus = FocusNode();
+  final _passwordFocus = FocusNode();
 
-@override
-  void dispose(){
+  bool _isPasswordVisible = true;
+
+  @override
+  void dispose() {
     super.dispose();
-emailController.dispose();
-passwordController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    _emailFocus.dispose();
+    _passwordFocus.dispose();
+  }
+
+  String? _validateEmail(String? value) {
+    if (value == null || value.isEmpty) {
+      return "Please enter your Email";
+    }
+    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    if (!emailRegex.hasMatch(value)) {
+      return "Please enter valid Email";
+    }
+    return null;
+  }
+
+  String? _validatePassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return "Please enter your password";
+    }
+    if (value.length < 6) {
+      return "password must be at least 6 characters";
+    }
+    return null;
   }
 
   @override
@@ -29,6 +57,7 @@ passwordController.dispose();
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Form(
+            key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -51,21 +80,32 @@ passwordController.dispose();
                   controller: emailController,
                   hintText: "Enter your Email",
                   prefixIcon: Icon(Icons.email_outlined),
+                  focusNode: _emailFocus,
+                  validator: _validateEmail,
                 ),
                 SizedBox(height: 16),
                 CustomTextField(
                   controller: passwordController,
                   hintText: "Enter your Password",
-                  obscureText: true,
+                  obscureText: _isPasswordVisible,
                   keyboardType: TextInputType.number,
                   prefixIcon: Icon(Icons.lock_outlined),
-                  suffixIcon: Icon(Icons.remove_red_eye),
+                  suffixIcon: IconButton(
+                    onPressed: () {
+                      setState(() {
+                        _isPasswordVisible = !_isPasswordVisible;
+                      });
+                    },
+                    icon: Icon(_isPasswordVisible?  Icons.visibility: Icons.visibility_off),
+                  ),
+                  focusNode: _passwordFocus,
+                  validator: _validatePassword,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(right: 20,top: 16),
+                      padding: const EdgeInsets.only(right: 20, top: 16),
                       child: Text(
                         "Forgot Password",
                         style: TextStyle(
@@ -76,7 +116,18 @@ passwordController.dispose();
                   ],
                 ),
                 SizedBox(height: 16),
-                CustomButton(onPressed: () {}, text: ("Log in")),
+                CustomButton(
+                  onPressed: () {
+                    FocusScope.of(context).unfocus();
+                    if (_formKey.currentState?.validate() ?? false) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => SignupScreen()),
+                      );
+                    }
+                  },
+                  text: ("Log in"),
+                ),
                 SizedBox(height: 20),
                 Center(
                   child: RichText(
@@ -94,9 +145,15 @@ passwordController.dispose();
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                               ),
-                          recognizer: TapGestureRecognizer()..onTap=(){
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => SignupScreen(),));
-                           }
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SignupScreen(),
+                                ),
+                              );
+                            },
                         ),
                       ],
                     ),
