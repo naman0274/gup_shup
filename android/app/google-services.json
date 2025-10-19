@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1026761389983",
+    "project_id": "gupshup-chat-app-27",
+    "storage_bucket": "gupshup-chat-app-27.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1026761389983:android:7407324591707b8481afaa",
+        "android_client_info": {
+          "package_name": "com.example.gup_shup"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAKG6xSAEGn6O71sTSWdYaBEWonQtFNVhg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
