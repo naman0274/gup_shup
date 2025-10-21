@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:gup_shup/config/theme/app_theme.dart';
-import 'package:gup_shup/data/repositories/auth_repository.dart';
+import 'package:gup_shup/data/services/service_locator.dart';
 import 'package:gup_shup/presentation/screens/auth/login_screen.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
+import 'package:gup_shup/router/app_router.dart';
+
 
 void main() async{
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await setupServiceLocator();
   runApp(const MyApp());
 }
 
@@ -20,6 +17,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      navigatorKey: getIt<AppRouter>().navigatorKey,
       title: 'Messenger App',
 
       theme: AppTheme.lightTheme,

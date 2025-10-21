@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:gup_shup/config/theme/app_theme.dart';
+
 import 'package:gup_shup/core/common/custom_button.dart';
 import 'package:gup_shup/core/common/custom_text_field.dart';
+import 'package:gup_shup/data/services/service_locator.dart';
 import 'package:gup_shup/presentation/screens/auth/signup_screen.dart';
+import 'package:gup_shup/router/app_router.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -33,7 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
     if (value == null || value.isEmpty) {
       return "Please enter your Email";
     }
-    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    final emailRegex = RegExp(r'^[\w-]+@([\w-]+\.)+[\w-]{2,4}$');
     if (!emailRegex.hasMatch(value)) {
       return "Please enter valid Email";
     }
@@ -147,12 +149,13 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => SignupScreen(),
-                                ),
-                              );
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //     builder: (context) => SignupScreen(),
+                              //   ),
+                              // );
+                              getIt<AppRouter>().push(const SignupScreen());
                             },
                         ),
                       ],
