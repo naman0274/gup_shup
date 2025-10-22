@@ -9,6 +9,8 @@ import 'package:gup_shup/presentation/screens/auth/signup_screen.dart';
 import 'package:gup_shup/router/app_router.dart';
 
 class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }

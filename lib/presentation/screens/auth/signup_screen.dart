@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:gup_shup/config/theme/app_theme.dart';
 import 'package:gup_shup/core/common/custom_button.dart';
 import 'package:gup_shup/core/common/custom_text_field.dart';
+import 'package:gup_shup/data/repositories/auth_repository.dart';
+import 'package:gup_shup/data/services/service_locator.dart';
 import 'package:gup_shup/presentation/screens/auth/login_screen.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -77,10 +79,32 @@ class _SignupScreenState extends State<SignupScreen> {
       return "Please enter your Phone number";
     }
     final phoneRegex = RegExp(r'^\+?[\d\s-]{10,}$');
-    if (!phoneRegex.hasMatch(value)){
+    if (!phoneRegex.hasMatch(value)) {
       return "Please Enter valid number";
     }
     return null;
+  }
+
+  Future<void> handleSignUp() async {
+    FocusScope.of(context).unfocus();
+    if (_formKey.currentState?.validate() ?? false) {
+      try {
+        getIt<AuthRepository>().signUp(
+          fullName: nameController.text,
+          username: userNameController.text,
+          email: emailController.text,
+          phoneNumber: phoneController.text,
+          password: passwordController.text,
+        );
+      } catch (e) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(e.toString())));
+      }
+    }
+    else{
+      print("form validation failed");
+    }
   }
 
   String? _validatePassword(String? value) {
@@ -154,28 +178,25 @@ class _SignupScreenState extends State<SignupScreen> {
                     hintText: "Password",
                     obscureText: !_isPasswordVisible,
                     prefixIcon: Icon(Icons.lock_outlined),
-                    suffixIcon: IconButton(onPressed: (){
-                      setState(() {
-                        _isPasswordVisible=!_isPasswordVisible;
-                      });
-                    }, icon: Icon(_isPasswordVisible?Icons.visibility: Icons.visibility_off)),
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _isPasswordVisible = !_isPasswordVisible;
+                        });
+                      },
+                      icon: Icon(
+                        _isPasswordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                      ),
+                    ),
 
                     focusNode: _passwordFocus,
                     validator: _validatePassword,
                   ),
                   SizedBox(height: 24),
                   CustomButton(
-                    onPressed: () {
-                      FocusScope.of(context).unfocus();
-                      if (_formKey.currentState?.validate() ?? false) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => LoginScreen(),
-                          ),
-                        );
-                      }
-                    },
+                    onPressed: handleSignUp,
                     text: ("Create Account"),
                   ),
                   SizedBox(height: 24),
