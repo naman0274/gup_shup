@@ -1,11 +1,11 @@
 import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'package:gup_shup/data/models/user_model.dart';
 import 'package:gup_shup/data/services/base_repository.dart';
 
 class AuthRepository extends BaseRepository {
-  // Stream<User?> get authStateChanges => auth.authStateChanges();
+  Stream<User?> get authStateChanges => auth.authStateChanges();
   Future<UserModel> signUp({
     required String fullName,
     required String username,
@@ -66,7 +66,9 @@ class AuthRepository extends BaseRepository {
     }
   }
 
-
+ Future<void> signOut() async{
+  await auth.signOut();
+ }
   Future<UserModel> getUserData(String uid) async {
     try {
       final doc = await firestore.collection("users").doc(uid).get();

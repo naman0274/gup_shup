@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:gup_shup/core/common/custom_button.dart';
 import 'package:gup_shup/core/common/custom_text_field.dart';
 import 'package:gup_shup/data/services/service_locator.dart';
+import 'package:gup_shup/logic/cubits/auth/auth_cubit.dart' show AuthCubit;
 import 'package:gup_shup/presentation/screens/auth/signup_screen.dart';
 import 'package:gup_shup/router/app_router.dart';
 
@@ -54,6 +55,24 @@ class _LoginScreenState extends State<LoginScreen> {
     return null;
   }
 
+  Future<void> handleSignIn() async {
+    FocusScope.of(context).unfocus();
+    if (_formKey.currentState?.validate() ?? false) {
+      try {
+        getIt<AuthCubit>().signIn(
+          email: emailController.text,
+          password: passwordController.text,
+        );
+      } catch (e) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(e.toString())));
+      }
+    } else {
+      print("form validation failed");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -100,7 +119,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         _isPasswordVisible = !_isPasswordVisible;
                       });
                     },
-                    icon: Icon(_isPasswordVisible?  Icons.visibility: Icons.visibility_off),
+                    icon: Icon(
+                      _isPasswordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                    ),
                   ),
                   focusNode: _passwordFocus,
                   validator: _validatePassword,
@@ -120,18 +143,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ],
                 ),
                 SizedBox(height: 16),
-                CustomButton(
-                  onPressed: () {
-                    FocusScope.of(context).unfocus();
-                    if (_formKey.currentState?.validate() ?? false) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => SignupScreen()),
-                      );
-                    }
-                  },
-                  text: ("Log in"),
-                ),
+                CustomButton(onPressed: handleSignIn, text: ("Log in")),
                 SizedBox(height: 20),
                 Center(
                   child: RichText(
@@ -164,6 +176,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                 ),
+
               ],
             ),
           ),
