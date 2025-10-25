@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gup_shup/config/theme/app_theme.dart';
 import 'package:gup_shup/data/services/service_locator.dart';
 import 'package:gup_shup/presentation/screens/auth/login_screen.dart';
+import 'package:gup_shup/presentation/screens/splash_screen.dart';
 import 'package:gup_shup/router/app_router.dart';
 
 
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
       title: 'Messenger App',
 
       theme: AppTheme.lightTheme,
-      home: LoginScreen(),
+      home: SplashScreen(),
     );
   }
 }
