@@ -6,6 +6,7 @@ import 'package:gup_shup/data/services/base_repository.dart';
 
 class AuthRepository extends BaseRepository {
   Stream<User?> get authStateChanges => auth.authStateChanges();
+
   Future<UserModel> signUp({
     required String fullName,
     required String username,
@@ -14,7 +15,10 @@ class AuthRepository extends BaseRepository {
     required String password,
   }) async {
     try {
-      final formattedPhoneNumber = phoneNumber.replaceAll(RegExp(r'\s+'), "".trim());
+      final formattedPhoneNumber = phoneNumber.replaceAll(
+        RegExp(r'\s+'),
+        "".trim(),
+      );
       final userCredential = await auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
@@ -37,6 +41,7 @@ class AuthRepository extends BaseRepository {
       rethrow;
     }
   }
+
 
   Future<UserModel> signIn({
     required String email,
@@ -66,20 +71,21 @@ class AuthRepository extends BaseRepository {
     }
   }
 
- Future<void> signOut() async{
-  await auth.signOut();
- }
+
+  Future<void> signOut() async {
+    await auth.signOut();
+  }
+
   Future<UserModel> getUserData(String uid) async {
     try {
       final doc = await firestore.collection("users").doc(uid).get();
       if (!doc.exists) {
         throw "User data not found";
       }
+      log(doc.id);
       return UserModel.fromFirestore(doc);
-    }
-    catch (e) {
+    } catch (e) {
       throw "Failed to save user data";
     }
   }
-
 }
