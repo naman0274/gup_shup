@@ -14,17 +14,22 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Text("Chats", style: TextStyle(fontSize: 24)),
         actions: [
-          InkWell(
-            onTap: () async {
-              await getIt<AuthCubit>().signOut();
-              getIt<AppRouter>().pushAndRemoveUntil(const LoginScreen());
-            },
-            child: Icon(Icons.logout),
+          Padding(
+            padding: EdgeInsetsGeometry.only(right: 15),
+            child: InkWell(
+              onTap: () async {
+                await getIt<AuthCubit>().signOut();
+                getIt<AppRouter>().pushAndRemoveUntil(const LoginScreen());
+              },
+              child: Icon(Icons.logout),
+            ),
           ),
         ],
       ),
       body: Center(child: Text("User is authenticated ")),
+      floatingActionButton: FloatingActionButton(onPressed: () {},child: Icon(Icons.chat,),foregroundColor: Colors.white,),
     );
   }
 }
