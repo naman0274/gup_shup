@@ -22,6 +22,13 @@ class _HomeScreenState extends State<HomeScreen> {
               onTap: () async {
                 await getIt<AuthCubit>().signOut();
                 getIt<AppRouter>().pushAndRemoveUntil(const LoginScreen());
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Logged out successfully!'),
+                    backgroundColor: Colors.green,
+                    duration: Duration(seconds: 2),
+                  ),
+                );
               },
               child: Icon(Icons.logout),
             ),

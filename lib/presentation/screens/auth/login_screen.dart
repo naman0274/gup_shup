@@ -86,7 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
         if (state.status == AuthStatus.authenticated) {
           getIt<AppRouter>().pushAndRemoveUntil(HomeScreen());
         } else if (state.status == AuthStatus.error && state.error != null) {
-          UiUtils.showSnackBar(context, message: state.error!);
+          UiUtils.showSnackBar(context, message: state.error!,isError: true);
         }
       },
       builder: (context, state) {
@@ -115,7 +115,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     SizedBox(height: 30),
                     CustomTextField(
                       controller: emailController,
-                      hintText: "Enter your Email",
+                      hintText: "Enter Email",
                       prefixIcon: Icon(Icons.email_outlined),
                       focusNode: _emailFocus,
                       validator: _validateEmail,
@@ -123,9 +123,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     SizedBox(height: 16),
                     CustomTextField(
                       controller: passwordController,
-                      hintText: "Enter your Password",
+                      hintText: "Enter Password",
                       obscureText: _isPasswordVisible,
-                      keyboardType: TextInputType.number,
                       prefixIcon: Icon(Icons.lock_outlined),
                       suffixIcon: IconButton(
                         onPressed: () {
@@ -160,12 +159,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     CustomButton(
                       onPressed: handleSignIn,
                       child: state.status == AuthStatus.loading
-                          ? CircularProgressIndicator()
+                          ? CircularProgressIndicator(
+                        color: Colors.white,
+                      )
                           : Text(
                               "Login",
                               style: TextStyle(color: Colors.white),
                             ),
-                      text: ("Log in"),
+
                     ),
                     SizedBox(height: 20),
                     Center(

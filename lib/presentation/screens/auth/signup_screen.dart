@@ -140,6 +140,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        SizedBox(height: 30,),
                         Text(
                           "Create Account",
                           style: Theme

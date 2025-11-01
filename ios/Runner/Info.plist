@@ -16,6 +16,8 @@
 	<string>gup_shup</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
+	<key>NSContactsUsageDescription</key>
+    <string>Your description of why you are requesting permissions.</string>
 	<key>CFBundleShortVersionString</key>
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>

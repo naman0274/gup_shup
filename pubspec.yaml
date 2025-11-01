@@ -41,6 +41,8 @@ dependencies:
   equatable: ^2.0.7
   flutter_bloc: ^9.1.1
   lottie: ^2.3.0
+  flutter_contacts: ^1.1.9+2
+
 
 dev_dependencies:
   flutter_test:
