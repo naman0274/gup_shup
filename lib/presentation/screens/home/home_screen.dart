@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gup_shup/data/repositories/contact_repository.dart';
 import 'package:gup_shup/data/services/service_locator.dart';
 import 'package:gup_shup/logic/cubits/auth/auth_cubit.dart';
 import 'package:gup_shup/presentation/screens/auth/login_screen.dart';
@@ -10,6 +11,64 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  late final ContactRepository _contactRepository;
+
+  @override
+  void initState() {
+    _contactRepository = getIt<ContactRepository>();
+    super.initState();
+  }
+
+  void _showContactList(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              Text(
+                "Contacts",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              Expanded(
+                child: FutureBuilder<List<Map<String, dynamic>>>(
+                  future: _contactRepository.getRegisterContacts(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Center(child: Text("Error: ${snapshot.error}"));
+                    }
+                    if (snapshot.hasData) {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                    final contacts = snapshot.data!;
+                    if (contacts.isEmpty) {
+                      return Center(child: Text("No contacts found"));
+                    }
+                    return ListView.builder(
+                      itemBuilder: (context, index) {
+                        final contact = contacts[index];
+                        return ListTile(
+                          leading: CircleAvatar(
+                            backgroundColor: Theme.of(
+                              context,
+                            ).primaryColor.withValues(alpha: 0.1),
+                            child: Text(contact["name"][0].toUpperCase()),
+                          ),
+                          title: Text(contact["name"]),
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +95,11 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       body: Center(child: Text("User is authenticated ")),
-      floatingActionButton: FloatingActionButton(onPressed: () {},child: Icon(Icons.chat,),foregroundColor: Colors.white,),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _showContactList(context),
+        child: Icon(Icons.chat),
+        foregroundColor: Colors.white,
+      ),
     );
   }
 }

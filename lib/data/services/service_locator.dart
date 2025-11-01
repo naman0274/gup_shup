@@ -8,6 +8,7 @@ import 'package:gup_shup/logic/cubits/auth/auth_cubit.dart';
 import 'package:gup_shup/router/app_router.dart';
 
 import '../../firebase_options.dart';
+import '../repositories/contact_repository.dart';
 
 final getIt = GetIt.instance;
 
@@ -20,5 +21,6 @@ Future<void> setupServiceLocator() async {
   );
   getIt.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
   getIt.registerLazySingleton(() => AuthRepository());
+  getIt.registerLazySingleton(() => ContactRepository());
   getIt.registerLazySingleton(() => AuthCubit(authRepository: AuthRepository()));
 }
