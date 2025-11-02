@@ -11,7 +11,7 @@ plugins {
 android {
     namespace = "com.example.gup_shup"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    ndkVersion = "27.0.12077973"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -24,17 +24,21 @@ android {
 
     defaultConfig {
         applicationId = "com.example.gup_shup"
-        minSdk = flutter.minSdkVersion
+        minSdk = 23
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
 
-        // 🔧 Fix for {applicationName} unresolved
-        manifestPlaceholders = [applicationName: "io.flutter.app.FlutterApplication"]
+        // ✅ Fixed: mutable map + correct type + no reassignment issue
+        manifestPlaceholders.putAll(
+            mutableMapOf(
+                "applicationName" to "io.flutter.app.FlutterApplication"
+            )
+        )
     }
 
     buildTypes {
-        release {
+        getByName("release") {
             signingConfig = signingConfigs.getByName("debug")
         }
     }

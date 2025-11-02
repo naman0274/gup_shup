@@ -27,7 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              Text(
+              const Text(
                 "Contacts",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
@@ -38,21 +38,23 @@ class _HomeScreenState extends State<HomeScreen> {
                     if (snapshot.hasError) {
                       return Center(child: Text("Error: ${snapshot.error}"));
                     }
-                    if (snapshot.hasData) {
-                      return Center(child: CircularProgressIndicator());
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
                     }
+                    if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return const Center(child: Text("No contacts found"));
+                    }
+
                     final contacts = snapshot.data!;
-                    if (contacts.isEmpty) {
-                      return Center(child: Text("No contacts found"));
-                    }
                     return ListView.builder(
+                      itemCount: contacts.length,
                       itemBuilder: (context, index) {
                         final contact = contacts[index];
                         return ListTile(
                           leading: CircleAvatar(
-                            backgroundColor: Theme.of(
-                              context,
-                            ).primaryColor.withValues(alpha: 0.1),
+                            backgroundColor: Theme.of(context)
+                                .primaryColor
+                                .withOpacity(0.1),
                             child: Text(contact["name"][0].toUpperCase()),
                           ),
                           title: Text(contact["name"]),
@@ -73,10 +75,10 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Chats", style: TextStyle(fontSize: 24)),
+        title: const Text("Chats", style: TextStyle(fontSize: 24)),
         actions: [
           Padding(
-            padding: EdgeInsetsGeometry.only(right: 15),
+            padding: const EdgeInsets.only(right: 15),
             child: InkWell(
               onTap: () async {
                 await getIt<AuthCubit>().signOut();
@@ -89,15 +91,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 );
               },
-              child: Icon(Icons.logout),
+              child: const Icon(Icons.logout),
             ),
           ),
         ],
       ),
-      body: Center(child: Text("User is authenticated ")),
+      body: const Center(child: Text("User is authenticated")),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showContactList(context),
-        child: Icon(Icons.chat),
+        child: const Icon(Icons.chat),
         foregroundColor: Colors.white,
       ),
     );
