@@ -3,6 +3,7 @@ import 'package:gup_shup/data/repositories/contact_repository.dart';
 import 'package:gup_shup/data/services/service_locator.dart';
 import 'package:gup_shup/logic/cubits/auth/auth_cubit.dart';
 import 'package:gup_shup/presentation/screens/auth/login_screen.dart';
+import 'package:gup_shup/presentation/screens/chat/chat_message_screen.dart';
 import 'package:gup_shup/router/app_router.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -52,12 +53,20 @@ class _HomeScreenState extends State<HomeScreen> {
                         final contact = contacts[index];
                         return ListTile(
                           leading: CircleAvatar(
-                            backgroundColor: Theme.of(context)
-                                .primaryColor
-                                .withOpacity(0.1),
+                            backgroundColor: Theme.of(
+                              context,
+                            ).primaryColor.withValues(alpha: 0.1),
                             child: Text(contact["name"][0].toUpperCase()),
                           ),
                           title: Text(contact["name"]),
+                          onTap: () {
+                            getIt<AppRouter>().push(
+                              ChatMessageScreen(
+                                receiverId: contact['id'],
+                                receiverName: contact['name'],
+                              ),
+                            );
+                          },
                         );
                       },
                     );

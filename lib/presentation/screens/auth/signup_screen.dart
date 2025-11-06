@@ -1,15 +1,12 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gup_shup/config/theme/app_theme.dart';
 import 'package:gup_shup/core/common/custom_button.dart';
 import 'package:gup_shup/core/common/custom_text_field.dart';
 import 'package:gup_shup/core/utils/ui_utils.dart';
-import 'package:gup_shup/data/repositories/auth_repository.dart';
 import 'package:gup_shup/data/services/service_locator.dart';
 import 'package:gup_shup/logic/cubits/auth/auth_cubit.dart';
 import 'package:gup_shup/logic/cubits/auth/auth_state.dart';
-import 'package:gup_shup/presentation/screens/auth/login_screen.dart';
 import 'package:gup_shup/presentation/screens/home/home_screen.dart';
 import 'package:gup_shup/router/app_router.dart';
 

@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gup_shup/data/models/chat_message.dart';
+import 'package:gup_shup/data/services/service_locator.dart';
+import 'package:gup_shup/logic/cubits/chat/chat_cubit.dart';
 
 class ChatMessageScreen extends StatefulWidget {
   final String receiverId;
@@ -18,6 +20,21 @@ class ChatMessageScreen extends StatefulWidget {
 
 class _ChatMessageScreenState extends State<ChatMessageScreen> {
   final TextEditingController messageController = TextEditingController();
+late final ChatCubit _chatCubit;
+  @override
+  void initState() {
+   _chatCubit = getIt<ChatCubit>();
+   _chatCubit.enterChat(widget.receiverId);
+    super.initState();
+  }
+  Future<void> _handleSendMessage() async {
+    final messageText = messageController.text.trim();
+    messageController.clear();
+    await _chatCubit.sendMessage(
+        content: messageText, receiverId: widget.receiverId);
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +84,7 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
                     readBy: [],
                     status: MessageStatus.sent,
                   ),
-                  isMe: true,
+                  isMe: false,
                 );
               },
             ),
@@ -101,7 +118,7 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
                     ),
                     SizedBox(width: 8),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: _handleSendMessage,
                       icon: Icon(
                         Icons.send,
                         color: Theme.of(context).primaryColor,
