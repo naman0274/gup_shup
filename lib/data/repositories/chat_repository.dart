@@ -132,4 +132,38 @@ class ChatRepository extends BaseRepository {
         .toList());
   }
 
+  Stream<int> getUnreadCount(String chatRoomId, String userId) {
+    return getChatRoomMessages(chatRoomId)
+        .where("receiverId", isEqualTo: userId)
+        .where('status', isEqualTo: MessageStatus.sent.toString())
+        .snapshots()
+        .map((snapshot) => snapshot.docs.length);
+  }
+  Future<void> markMessagesAsRead(String chatRoomId, String userId) async {
+    try {
+      final batch = firestore.batch();
+
+      //get all unread messages where user is receviver
+
+      final unreadMessages = await getChatRoomMessages(chatRoomId)
+          .where(
+        "receiverId",
+        isEqualTo: userId,
+      )
+          .where('status', isEqualTo: MessageStatus.sent.toString())
+          .get();
+      print("found ${unreadMessages.docs.length} unread messages");
+
+      for (final doc in unreadMessages.docs) {
+        batch.update(doc.reference, {
+          'readBy': FieldValue.arrayUnion([userId]),
+          'status': MessageStatus.read.toString(),
+        });
+
+        await batch.commit();
+
+        print("Marked messaegs as read for user $userId");
+      }
+    } catch (e) {}
+  }
 }

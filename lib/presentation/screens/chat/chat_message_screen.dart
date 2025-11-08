@@ -6,6 +6,7 @@ import 'package:gup_shup/data/services/service_locator.dart';
 import 'package:gup_shup/logic/cubits/chat/chat_cubit.dart';
 import 'package:bloc/bloc.dart';
 import 'package:gup_shup/logic/cubits/chat/chat_state.dart';
+import 'package:intl/intl.dart';
 
 class ChatMessageScreen extends StatefulWidget {
   final String receiverId;
@@ -37,6 +38,13 @@ late final ChatCubit _chatCubit;
         content: messageText, receiverId: widget.receiverId);
   }
 
+  @override
+  void dispose() {
+    messageController.dispose();
+    // _scrollController.dispose();
+    _chatCubit.leaveChat();
+    super.dispose();
+  }
 
 
   @override
@@ -184,12 +192,12 @@ class MessageBubble extends StatelessWidget {
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  "4.54 AM",
+                Text(DateFormat('h:mm a').format(message.timestamp.toDate() ) ,
                   style: TextStyle(color: isMe ? Colors.white : Colors.black),
                 ),
-                Icon(
+             if (isMe)  Icon(
                   Icons.done_all,
+                  size: 14,
                   color: message.status == MessageStatus.read
                       ? Colors.red
                       : Colors.white,

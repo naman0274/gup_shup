@@ -24,7 +24,7 @@ class ChatCubit extends Cubit<ChatState> {
        super(const ChatState());
 
   void enterChat(String receiverId) async {
-    // _isInChat = true;
+     _isInChat = true;
     emit(state.copyWith(status: ChatStatus.loading));
     try {
       final chatRoom = await _chatRepository.getOrCreateChatRoom(
@@ -81,6 +81,10 @@ class ChatCubit extends Cubit<ChatState> {
         .getMessages(chatRoomId)
         .listen(
           (messages) {
+            if (_isInChat) {
+              _markMessagesAsRead(chatRoomId);
+            }
+
             emit(state.copyWith(messages: messages, error: null));
           },
           onError: (error) {
@@ -93,4 +97,17 @@ class ChatCubit extends Cubit<ChatState> {
           },
         );
   }
+
+  Future<void> _markMessagesAsRead(String chatRoomId) async {
+    try {
+      await _chatRepository.markMessagesAsRead(chatRoomId, currentUserId);
+    } catch (e) {
+      print("error marking messages as read $e");
+    }
+  }
+
+  Future<void> leaveChat() async {
+    _isInChat = false;
+  }
+
 }
