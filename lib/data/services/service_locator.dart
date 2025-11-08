@@ -24,9 +24,12 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
   getIt.registerLazySingleton(() => AuthRepository());
   getIt.registerLazySingleton(() => ContactRepository());
+  getIt.registerLazySingleton(() => ChatRepository());
+
   getIt.registerLazySingleton(
     () => AuthCubit(authRepository: AuthRepository()),
   );
+
   getIt.registerFactory(
     () => ChatCubit(
       chatRepository: ChatRepository(),

@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gup_shup/data/models/chat_message.dart';
 import 'package:gup_shup/data/services/service_locator.dart';
 import 'package:gup_shup/logic/cubits/chat/chat_cubit.dart';
+import 'package:bloc/bloc.dart';
+import 'package:gup_shup/logic/cubits/chat/chat_state.dart';
 
 class ChatMessageScreen extends StatefulWidget {
   final String receiverId;
@@ -67,69 +70,73 @@ late final ChatCubit _chatCubit;
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: 5,
-              itemBuilder: (context, index) {
-                return MessageBubble(
-                  message: ChatMessage(
-                    id: '09765456789',
-                    chatRoomId: "765434567",
-                    senderId: "23456765432",
-                    receiverId: "12345678",
-                    content: "hello this is my first message",
-                    timestamp: Timestamp.now(),
-                    readBy: [],
-                    status: MessageStatus.sent,
-                  ),
-                  isMe: false,
-                );
-              },
+      body: BlocBuilder<ChatCubit, ChatState>(
+        bloc: _chatCubit,
+        builder: (context, state) {
+          if (state.status== ChatStatus.loading){
+            return Center(child: CircularProgressIndicator());
+          }
+          if (state.status == ChatStatus.error){
+            return Center(child: Text(state.error??"something went wrong"));
+          }
+          return Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                reverse: true,
+                itemCount: state.messages.length,
+                itemBuilder: (context, index) {
+                  final message = state.messages[index];
+                  final isMe = message.senderId == _chatCubit.currentUserId;                 return MessageBubble(
+                    message:message,
+                    isMe: isMe,
+                  );
+                },
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                Row(
-                  children: [Icon(Icons.emoji_emotions),
-                    SizedBox(width: 8,),
-                    Expanded(
-                      child: TextField(
-                        controller: messageController,
-                        keyboardType: TextInputType.multiline,
-                        textCapitalization: TextCapitalization.sentences,
-                        decoration: InputDecoration(
-                          hintText: "Type a message",
-                          filled: true,
-                          fillColor: Theme.of(context).cardColor,
-                          contentPadding: EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 8,
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(24),
-                            borderSide: BorderSide.none,
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  Row(
+                    children: [Icon(Icons.emoji_emotions),
+                      SizedBox(width: 8,),
+                      Expanded(
+                        child: TextField(
+                          controller: messageController,
+                          keyboardType: TextInputType.multiline,
+                          textCapitalization: TextCapitalization.sentences,
+                          decoration: InputDecoration(
+                            hintText: "Type a message",
+                            filled: true,
+                            fillColor: Theme.of(context).cardColor,
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 8,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(24),
+                              borderSide: BorderSide.none,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    SizedBox(width: 8),
-                    IconButton(
-                      onPressed: _handleSendMessage,
-                      icon: Icon(
-                        Icons.send,
-                        color: Theme.of(context).primaryColor,
+                      SizedBox(width: 8),
+                      IconButton(
+                        onPressed: _handleSendMessage,
+                        icon: Icon(
+                          Icons.send,
+                          color: Theme.of(context).primaryColor,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+          );
+        },
       ),
     );
   }
